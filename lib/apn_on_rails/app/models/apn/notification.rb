@@ -18,20 +18,10 @@ class APN::Notification < APN::Base
   include ::ActionView::Helpers::TextHelper
   extend ::ActionView::Helpers::TextHelper
   serialize :custom_properties
+  serialize :alert
 
   belongs_to :device, :class_name => 'APN::Device'
   has_one    :app,    :class_name => 'APN::App', :through => :device
-
-  # Stores the text alert message you want to send to the device.
-  #
-  # If the message is over 150 characters long it will get truncated
-  # to 150 characters with a <tt>...</tt>
-  def alert=(message)
-    if !message.blank? && message.size > 150
-      message = truncate(message, :length => 150)
-    end
-    write_attribute('alert', message)
-  end
 
   # Creates a Hash that will be the payload of an APN.
   #
