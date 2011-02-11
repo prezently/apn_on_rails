@@ -46,14 +46,33 @@ class APN::App < APN::Base
       end
       begin
         APN::Connection.open_for_delivery({:cert => the_cert}) do |conn, sock|
-          APN::Device.find_each(:conditions => conditions) do |dev|
-            dev.unsent_notifications.each do |noty|
-              conn.write(noty.message_for_sending)
-              noty.sent_at = Time.now
-              noty.save
-            end
-          end
-        end
+                 APN::Device.find_each(:conditions => conditions) do |dev|
+                   catch(:next_device) do
+                     dev.unsent_notifications.each do |noty|
+                       conn.write(noty.message_for_sending)
+
+                       message = conn.read(6)
+                       command = message[0]
+                       status  = message[1]
+                       identifier = message[2..-1]
+
+                       if command == 8
+                         if status != 0
+                           Rails.logger.warn("Received error status binary message #{message.unpack("H*")}")
+                           dev.destroy
+                           throw :next_device
+                         end
+                       else
+                         Rails.logger.warn("Received unknown binary message #{message.unpack("H*")}")
+                       end
+
+                       noty.errors_nb = status
+                       noty.sent_at = Time.now
+                       noty.save
+                     end
+                   end
+                 end
+               end
       rescue Exception => e
         log_connection_exception(e)
       end
