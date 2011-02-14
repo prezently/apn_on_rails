@@ -145,7 +145,7 @@ class APN::App < APN::Base
 
   protected
   def self.log_connection_exception(ex)
-    Rails.logger.warn(["!!!!!!!!!!!!!",ex.class,"ex.message", ex.backtrace, "!!!!!!!!!!!!!!!!"].join("\n"))
+    Rails.logger.warn(["!!!!!!!!!!!!!",ex.class, ex.message, ex.backtrace, "!!!!!!!!!!!!!!!!"].flatten.join("\n"))
   end
 
 end
