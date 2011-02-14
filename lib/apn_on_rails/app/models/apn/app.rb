@@ -32,8 +32,8 @@ class APN::App < APN::Base
       app.send_notifications
     end
     if !configatron.apn.cert.blank?
-      global_cert = File.read(configatron.apn.cert)
-      send_notifications_for_cert(global_cert, nil)
+      #global_cert = File.read(configatron.apn.cert)
+      send_notifications_for_cert(configatron.apn.cert, nil)
     end
   end
 
