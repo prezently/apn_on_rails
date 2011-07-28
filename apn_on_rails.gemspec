@@ -81,6 +81,7 @@ easily add Apple Push Notification (iPhone) support to your Rails application.
     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/PRX/apn_on_rails}
+
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Apple Push Notifications on Rails}
